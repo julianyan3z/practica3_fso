@@ -1,0 +1,81 @@
+Ejecutando tests para misala crea
+
+Creando una sala con un tamaño normal.
+Prueba exitosa
+
+Creando una sala previamente existente sobreescribiendo
+Prueba exitosa
+
+Creando una sala previemente existente sin sobreescribir
+Prueba exitosa
+
+Creando una sala sin indicar la ruta
+Prueba exitosa
+
+Creando una sala sin indicar la capacidad
+Prueba exitosa
+
+Creando una sala con capacidad cero
+Prueba exitosa
+
+6 pruebas exitosas de 6 pruebas realizadas
+-------------------------------------------
+
+Ejecutando tests para misala reserva
+
+Reservando un asiento
+Prueba exitosa
+
+Reservando dos asientos
+Prueba exitosa
+
+Intentando reservar un id inválido
+Prueba exitosa
+
+Reservando tantos asientos como capacidad tenga la sala
+Prueba exitosa
+
+Reservando un asiento más que la capacidad de la sala
+Prueba exitosa
+
+Reservando un asiento después de haber reservado toda la sala
+Prueba exitosa
+
+6 pruebas exitosas de 6 pruebas realizadas
+-------------------------------------------
+
+Ejecutando tests para misala anula asientos
+
+Anulando un asiento válido
+Prueba exitosa
+
+Anulando un asiento inválido
+Prueba exitosa
+
+Anulando un asiento inválido (0)
+Prueba exitosa
+
+Anulando un asiento libre
+Prueba exitosa
+
+4 pruebas exitosas de 4 pruebas realizadas
+-------------------------------------------
+
+Ejecutando tests para misala estado
+
+Comprobando el estado de una sala que existe
+Hay 5 asientos libres.
+El asiento 1 está vacío.
+El asiento 2 está vacío.
+El asiento 3 está vacío.
+El asiento 4 está vacío.
+El asiento 5 está vacío.
+Prueba exitosa
+
+Comprobando el estado de una sala que no existe
+Prueba exitosa
+
+2 pruebas exitosas de 2 pruebas realizadas
+-------------------------------------------
+
+Han ocurrido 0 fallos
