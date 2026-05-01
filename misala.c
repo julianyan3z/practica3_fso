@@ -25,11 +25,13 @@ int main(int argc, char** argv) {
   int capacity;
   int overwrite = 0;
   int sel_asientos = 0;
+  int sel_personas = 0;
 
   int id;
 
   static struct option long_options[] = {
     {"asientos", no_argument, NULL, 'a'},
+    {"personas", no_argument, NULL, 'p'},
     {NULL, 0, NULL, 0}
   };
   
@@ -50,12 +52,78 @@ int main(int argc, char** argv) {
         if (strcmp(argv[optind - 1], "-asientos") == 0)
           sel_asientos = 1;
         break;
+      case 'p':
+      	if (strcmp(argv[optind - 1], "-personas") == 0)
+          sel_personas = 1;
+        break;
       default:
         printf("No reconocido.\n");
         break;
     }
   }
-
+  
+  
+  // misala compara ruta1 ruta2
+  if (strcmp(argv[1], "compara") ==0) {
+      if (argc != 4) {
+      	fprintf(stderr, "Uso: misala compara ruta1 ruta2\n");
+      	return -1;
+      }
+      
+      int fd1 = open(argv[2], O_RDONLY);
+      int fd2 = open(argv[3], O_RDONLY);
+      
+      if (fd1 == -1 || fd2 == -1) {
+      	perror("Error al abrir archivos");
+      	return -1;
+      }
+      
+      int cap1, cap2, occ1, occ2;
+      
+      if (read(fd1, &cap1, sizeof(int)) != sizeof(int) || 
+      	  read(fd2, &cap2, sizeof(int)) != sizeof(int)) {
+      	perror("Error leyendo capacidad");
+      	return -1;
+      }
+      
+      if (cap1 != cap2) {
+      	close(fd1);
+      	close(fd2);
+      	return 1;
+      }
+      
+      if (read(fd1, &occ1, sizeof(int)) != sizeof(int) || 
+      	  read(fd2, &occ2, sizeof(int)) != sizeof(int)) {
+      	perror("Error leyendo ocupados");
+      	return -1;
+      }
+      
+      if (occ1 != occ2) {
+      	close(fd1);
+      	close(fd2);
+      	return 1;
+      }
+      
+      int buffer1[cap1];
+      int buffer2[cap1];
+      
+      if (read(fd1, buffer1, cap1 * sizeof(int)) != cap1 * sizeof(int) ||
+      	  read(fd2, buffer2, cap1 * sizeof(int)) != cap1 * sizeof(int)) {
+      	perror("Error leyendo datos");
+      	return -1;
+      }
+      
+      close(fd1);
+      close(fd2);
+      
+      for (int i =0;i < cap1; i++) {
+      	if (buffer1[i] != buffer2[i]) {
+      	    return 1;
+      	}
+      }
+      
+      return 0;
+  }
 
   // Comprobamos si se ha especificado ruta
   if (filename == NULL) {
@@ -165,7 +233,38 @@ int main(int argc, char** argv) {
     }
 
     return 0;
-  }  
+  }
+  
+  // misala anula -f ruta -personas id_persona1
+  if (strcmp(argv[1], "anula") == 0 && sel_personas == 1) {
+
+    int id_asientos[capacidad_sala()];
+    int num_asientos = 0;
+
+    for (int i = optind; i < argc; i++) {
+      int id_persona = atoi(argv[i]);
+      int encontrado = 0;
+      
+      for (int j=1; j<=capacidad_sala(); j++) {
+      	if (estado_asiento(j) == id_persona) {
+      	    libera_asiento(j);
+      	    id_asientos[num_asientos++] = j;
+      	    encontrado = 1;
+      	}
+      }
+      
+      if (!encontrado) {
+      	fprintf(stderr, "No se encontraron reservas para la persona %d.\n", id_persona);
+      }
+    }
+    
+    if (guarda_estado_parcial_sala(filename, num_asientos, id_asientos) == -1) {
+      fprintf(stderr, "Error al guardar cambios.\n");
+      return -1;
+    }
+    
+    return 0;
+  }
 
   // misala estado -f ruta
   if (strcmp(argv[1], "estado") == 0) {
@@ -180,6 +279,7 @@ int main(int argc, char** argv) {
 
     return 0;
   }
+  
 
   return 0;
 }

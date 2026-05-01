@@ -37,5 +37,17 @@ echo ""
 fallos=$(( fallos + $(echo $?)))
 echo "-------------------------------------------"
 
+echo "Ejecutando tests para misala personas"
+echo ""
+./anula_personas.sh
+fallos=$(( fallos + $(echo $?)))
+echo "-------------------------------------------"
+
+echo "Ejecutando tests para misala compara"
+echo ""
+./compara.sh
+fallos=$(( fallos + $(echo $?)))
+echo "-------------------------------------------"
+
 echo ""
 echo "Han ocurrido $fallos fallos"
