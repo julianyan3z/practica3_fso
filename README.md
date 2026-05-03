@@ -1,1 +1,0 @@
-# practica3_fso
